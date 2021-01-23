@@ -11,8 +11,8 @@ Variables:
 """
 
 import binascii
-import secp256k1
-from secp256k1 import ecdsa, schnorr
+import pySecp256k1 as secp256k1
+from pySecp256k1 import ecdsa, schnorr
 
 _unhexlify = binascii.unhexlify
 
