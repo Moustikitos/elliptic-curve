@@ -14,7 +14,7 @@ Sources:
    )
 
 ``python
->>> from dposlib.ark import secp256k1
+>>> from pySecp256k1 import secp256k1
 >>> secp256k1.G
 <secp256k1 point:
   x:79be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798

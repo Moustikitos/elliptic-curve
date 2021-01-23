@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-# created by Toons on 01/05/2017
+
 try:
     from setuptools import setup
 except ImportError:
@@ -32,7 +32,6 @@ kw = {
     "classifiers": [
         "Development Status :: 5 - Production/Stable",
         "Environment :: Console",
-        "Environment :: Web Environment",
         "Intended Audience :: Developers",
         "Intended Audience :: End Users/Desktop",
         "License :: OSI Approved :: MIT License",
