@@ -17,6 +17,17 @@ from pySecp256k1 import ecdsa, schnorr
 _unhexlify = binascii.unhexlify
 
 
+def puk(publicKey):
+    if isinstance(publicKey, (secp256k1.Point, list, tuple)):
+        return secp256k1.encoded_from_point(publicKey)
+    elif isinstance(publicKey, str):
+        return _unhexlify(publicKey)
+    elif isinstance(publicKey, bytes):
+        return publicKey
+    else:
+        raise ValueError("cannot encode publicKey")
+
+
 class Signature(list):
     r = property(
         lambda cls: list.__getitem__(cls, 0),
@@ -73,7 +84,7 @@ class Signature(list):
         """
         return ecdsa.verify(
             secp256k1.hash_sha256(message),
-            secp256k1.Point.decode(_unhexlify(publicKey)).encode(),
+            puk(publicKey),
             self.der
         )
 
@@ -92,7 +103,7 @@ class Signature(list):
         """
         return schnorr.bcrypto410_verify(
             secp256k1.hash_sha256(message),
-            secp256k1.Point.decode(_unhexlify(publicKey)).encode(),
+            puk(publicKey),
             self.raw
         )
 
@@ -112,7 +123,7 @@ class Signature(list):
         return schnorr.verify(
             secp256k1.hash_sha256(message),
             schnorr.bytes_from_point(
-                secp256k1.Point.decode(_unhexlify(publicKey))
+                secp256k1.Point.decode(puk(publicKey))
             ),
             self.raw
         )

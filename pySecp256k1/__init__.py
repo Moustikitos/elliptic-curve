@@ -274,10 +274,7 @@ def sig_from_der(der):
 
 def rand_k():
     """Generate a random nonce."""
-    while True:
-        k = random.getrandbits(p.bit_length())
-        if k < p:
-            return k
+    return random.getrandbits(p.bit_length()) % p
 
 
 def rfc6979_k(msg, secret0, V=None):
