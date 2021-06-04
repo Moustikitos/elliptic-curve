@@ -169,7 +169,7 @@ def point_mul(P, n):
         `secp256k1` point
     """
     R = None
-    for i in range(256):
+    for i in range(n.bit_length()):
         if ((n >> i) & 1):
             R = point_add(R, P)
         P = point_add(P, P)
