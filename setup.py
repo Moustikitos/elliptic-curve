@@ -27,7 +27,7 @@ kw = {
     "long_description_content_type": "text/markdown",
     "packages": ["pySecp256k1"],
     "install_requires": ["future"],
-    "dependecy_list": [],
+    "tests_requires": ["pytest", "pytest-benchmark"],
     "license": "Copyright 2021, MIT licence",
     "classifiers": [
         "Development Status :: 5 - Production/Stable",
