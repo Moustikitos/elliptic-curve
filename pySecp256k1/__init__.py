@@ -104,10 +104,6 @@ def tagged_hash(tag, msg):
     return hash_sha256(tag_hash + tag_hash + msg)
 
 
-def is_infinity(P):
-    return P is None
-
-
 def y_from_x(x):
     """
     Compute `y` from `x` according to `y²=x³+7`.
@@ -194,6 +190,29 @@ def is_quad(x):
 
 def has_square_y(P):
     return not is_infinity(P) and is_quad(P[1])
+
+
+def has_even_y(P):
+    return not is_infinity(P) and P[1] % 2 == 0
+
+
+def xor_bytes(b0, b1):
+    return bytes(x ^ y for (x, y) in zip(b0, b1))
+
+
+def is_infinity(P):
+    return P is None
+
+
+def lift_x(b):
+    x = int_from_bytes(b)
+    if x >= p:
+        return None
+    y_sq = (pow(x, 3, p) + 7) % p
+    y = pow(y_sq, (p + 1) // 4, p)
+    if pow(y, 2, p) != y_sq:
+        return None
+    return [x, y if y & 1 == 0 else p-y]
 
 
 def encoded_from_point(P):
