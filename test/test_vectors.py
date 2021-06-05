@@ -3,7 +3,6 @@
 
 import os
 import io
-import unittest
 import binascii
 from pySecp256k1 import schnorr
 
@@ -19,25 +18,22 @@ for column in SCHNORR_TEST_VECTORS[1:]:
     VECTORS.append(dict(zip(header, column.split(";"))))
 
 
-class TestSchnorrVectors(unittest.TestCase):
+class TestSchnorrVectors:
 
     def testVector1to4(self):
         for v in VECTORS[:4]:
-            v = VECTORS[0]
             secret0 = binascii.unhexlify(v["secret key"])
             pubkey = binascii.unhexlify(v["public key"])
             msg = binascii.unhexlify(v["message"])
             sig = binascii.unhexlify(v["signature"])
-            result = v["verification result"] == 'True'
+            rnd = binascii.unhexlify(v["aux_rand"])
+            result = v["verification result"].lower() == 'true'
 
-            self.assertEqual(
-                pubkey,
-                schnorr.bytes_from_point(
-                    schnorr.PublicKey.from_seed(secret0)
-                )
+            assert pubkey == schnorr.bytes_from_point(
+                schnorr.PublicKey.from_seed(secret0)
             )
-            self.assertEqual(sig, schnorr.sign(msg, secret0))
-            self.assertEqual(result, schnorr.verify(msg, pubkey, sig))
+            assert sig == schnorr.sign(msg, secret0, rnd)
+            assert result == schnorr.verify(msg, pubkey, sig)
 
     def testVector4(self):
         v = VECTORS[3]
@@ -48,17 +44,16 @@ class TestSchnorrVectors(unittest.TestCase):
         msg_mod_p = schnorr.bytes_from_int(
             schnorr.int_from_bytes(msg) % schnorr.p
         )
-        self.assertEqual(False, schnorr.verify(msg_mod_p, pubkey, sig))
+        assert not schnorr.verify(msg_mod_p, pubkey, sig)
         msg_mod_n = schnorr.bytes_from_int(
             schnorr.int_from_bytes(msg) % schnorr.n
         )
-        self.assertEqual(False, schnorr.verify(msg_mod_n, pubkey, sig))
+        assert not schnorr.verify(msg_mod_n, pubkey, sig)
 
     def testVector5(self):
         v = VECTORS[4]
         pubkey = binascii.unhexlify(v["public key"])
         msg = binascii.unhexlify(v["message"])
         sig = binascii.unhexlify(v["signature"])
-        result = v["verification result"] == 'True'
-        self.assertRaises(ValueError, schnorr.point_from_encoded, pubkey)
-        self.assertEqual(result, schnorr.verify(msg, pubkey, sig))
+        result = v["verification result"].lower() == 'true'
+        assert result == schnorr.verify(msg, pubkey, sig)
