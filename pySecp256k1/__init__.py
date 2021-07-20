@@ -72,9 +72,13 @@ def hash_sha256(b):
     Returns:
         sha256 hash bytes
     """
-    return hashlib.sha256(
-        b if isinstance(b, bytes) else b.encode("utf-8")
-    ).digest()
+    return bytes(
+        bytearray(
+            hashlib.sha256(
+                b if isinstance(b, bytes) else b.encode()
+            ).digest()
+        )
+    )
 
 
 #: precomputed hashtag
@@ -197,7 +201,7 @@ def has_even_y(P):
 
 
 def xor_bytes(b0, b1):
-    return bytes(x ^ y for (x, y) in zip(b0, b1))
+    return bytes([x ^ y for (x, y) in zip(b0, b1)])
 
 
 def is_infinity(P):
